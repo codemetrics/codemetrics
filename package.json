@@ -1,0 +1,31 @@
+{
+  "name": "codemetrics",
+  "version": "0.1.0",
+  "description": "A highly pluggable system to get stats and code metrics from your projects",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+    "prepublish" : "babel src --out-dir dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maxdow/codemetrics.git"
+  },
+  "keywords": [
+    "metrics",
+    "analyse",
+    "stats"
+  ],
+  "author": "Maxime Warnier",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/maxdow/codemetrics/issues"
+  },
+  "homepage": "https://github.com/maxdow/codemetrics#readme",
+  "dependencies": {
+    "commander": "^2.8.1"
+  },
+  "devDependencies": {
+    "babel": "^5.6.23"
+  }
+}
