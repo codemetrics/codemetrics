@@ -94,10 +94,18 @@ npm.load(null,function(err, _npm) {
 
 function installPackage(pkgName) {
   return new Promise(function(resolve,reject){
+    log2("Trying to install from npm :  npm install "+pkgName);
     exec("npm install "+pkgName,function(error, stdout, stderr) {
+          log2(error,"red");
+          log2(stderr,"red");
         if (error || stderr) {
-          reject(error,stderr);
+          var msgError = "" ;
+          //TODO handle code error from npm
+          reject({
+            msg : error
+          });
         } else {
+          log2(stdout);
           resolve(stdout);
         }
     });
@@ -108,4 +116,9 @@ function installPackage(pkgName) {
 function log(message,color){
   message = color ? clor[color](message).toString() : message;
   console.log(message);
+}
+function log2(...params) {
+  //if(verbose.LVL>2) {
+    log(params);
+  //}
 }

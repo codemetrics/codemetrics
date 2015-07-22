@@ -48,9 +48,10 @@ var parsers,processors,reporters;
 //TODO parsers could be piped
 handlePlugins(config.parsers,"parser",{})
   //.then((result) => {parsers = result})
-  .then((plugins) => handlePlugin(config.processors,"processor",plugins))
+  //TODO Fix the name processor > process
+  .then((plugins) => handlePlugins(config.processors,"processor",plugins))
   //.then((result) => {processors = result})
-  .then((plugins) => handlePlugin(config.reporters,"reporter",plugins))
+  .then((plugins) => handlePlugins(config.reporters,"reporter",plugins))
   //.then((result) => {reporters = result})
   .then((plugins) => console.log("=>",plugins))
   //TODO check input
