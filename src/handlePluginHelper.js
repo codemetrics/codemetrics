@@ -96,14 +96,12 @@ function installPackage(pkgName) {
   return new Promise(function(resolve,reject){
     log2("Trying to install from npm :  npm install "+pkgName);
     exec("npm install "+pkgName,function(error, stdout, stderr) {
-          log2(error,"red");
-          log2(stderr,"red");
-        if (error || stderr) {
-          var msgError = "" ;
+
           //TODO handle code error from npm
+        if (error) {
           reject({
             msg : error
-          });
+          })
         } else {
           log2(stdout);
           resolve(stdout);

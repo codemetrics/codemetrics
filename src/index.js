@@ -49,7 +49,7 @@ var parsers,processors,reporters;
 handlePlugins(config.parsers,"parser",{})
   //.then((result) => {parsers = result})
   //TODO Fix the name processor > process
-  .then((plugins) => handlePlugins(config.processors,"processor",plugins))
+  .then((plugins) => handlePlugins(config.processors,"process",plugins))
   //.then((result) => {processors = result})
   .then((plugins) => handlePlugins(config.reporters,"reporter",plugins))
   //.then((result) => {reporters = result})
