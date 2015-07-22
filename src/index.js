@@ -38,6 +38,7 @@ cli
 const config = processConfig(cli.config);
 const verbose = cli.verbose ? cli.verbose : true;
 const input = cli.args[0] ;
+  //TODO check input
 //console.log(config,cli.args);
 
 
@@ -53,12 +54,12 @@ handlePlugins(config.parsers,"parser",{})
   //.then((result) => {processors = result})
   .then((plugins) => handlePlugins(config.reporters,"reporter",plugins))
   //.then((result) => {reporters = result})
-  .then((plugins) => console.log("=>",plugins))
-  //TODO check input
-  /*new Codemetrics(input,verbose)
-  .parse(parsers)
-  .process(processors)
-  .report(reporters) ;
+  .then((plugins) => {
+    new Codemetrics(input,verbose)
+    .parse(plugins.parser)
+    .process(plugins.processor)
+    .report(plugins.reporter) ;
+  })
 
 /*
 const processors = config.processors.map(processor => handlePlugin(processor,"process"));
@@ -68,7 +69,10 @@ const reporters= config.reporters.map(reporter => handlePlugin(reporter,"reporte
 function handlePlugins(configListePlugins,type, plugins){
   return Promise.all(configListePlugins.map(plugin=>handlePluginHelper(plugin,type)))
   .then((result) => {
-    console.log(result);
+    //todo rename process > processor
+    if(type === "process") {
+      type="processor";
+    }
     plugins[type] = result;
     return plugins;
   })

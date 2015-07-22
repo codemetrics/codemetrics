@@ -11,11 +11,11 @@ module.exports = class Codemetrics {
   parse(parsers){
     this._log("--------------------");
     this._log("Parse...");
-    //try {
-      this.data = parsers.run(this.input);
-    //} catch(e){
-    //  console.error(e);
-    //}
+    try {
+      this.data = parsers[0].run(this.input);
+    } catch(e){
+      console.error(e);
+    }
     // trig error
     return this;
   }
@@ -45,7 +45,7 @@ module.exports = class Codemetrics {
 
   _log(message) {
     if(this.isVerbose){
-      this._log(message);
+      console.log(message);
     }
   }
 }
