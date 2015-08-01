@@ -4,6 +4,7 @@
   "description": "A highly pluggable system to get stats and code metrics from your projects",
   "main": "dist/index.js",
   "scripts": {
+    "start":"babel-node src",
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepublish": "babel src --out-dir dist"
   },
