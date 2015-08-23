@@ -5,6 +5,8 @@ const path = require("path");
 const cli = require("commander");
 const clor = require("clor");
 
+const logSymbols = require("log-symbols");
+
 const Codemetrics = require("./codemetrics.js");
 const handlePluginHelper = require("./handlePluginHelper.js");
 
@@ -21,6 +23,12 @@ const defaultConfig = {
     }]
 };
 
+//TODO parametrics keys
+var PLUGINS_TYPES_NAMES = {
+  parser : "parsers",
+  reporter : "reporters",
+  process : "processors"
+};
 
 const defaultConfigFile = "./codemetrics.config.js";
 
@@ -41,8 +49,10 @@ const input = cli.args[0] ;
   //TODO check input
 //console.log(config,cli.args);
 
-
 var parsers,processors,reporters;
+
+
+
 
 
 //TODO provide ability to handle multiples parsers
@@ -67,8 +77,11 @@ const reporters= config.reporters.map(reporter => handlePlugin(reporter,"reporte
 
 */
 function handlePlugins(configListePlugins,type, plugins){
+  logLoad(type,0);
   return Promise.all(configListePlugins.map(plugin=>handlePluginHelper(plugin,type)))
   .then((result) => {
+    logLoad(type,1);
+
     //todo rename process > processor
     if(type === "process") {
       type="processor";
@@ -77,15 +90,25 @@ function handlePlugins(configListePlugins,type, plugins){
     return plugins;
   })
   .catch( (result = {msg,errorMsg} ) => {
-    log(result.msg,"red");
+    logError(result.msg);
     if(result.errorMsg){
-      log(clor.line.bold.red("Error : ").line(result.errorMsg).toString());
+      logError(clor.line.bold.red("Error : ").line(result.errorMsg).toString());
     }
     process.exit(1);
   });
 }
 
 
+
+//TODO cst for status
+function logLoad(type,status){
+  if( status === 0) {
+    log({message:"Loading " +PLUGINS_TYPES_NAMES[type]+"... "});
+  }
+  if( status === 1) {
+    log({message:logSymbols.success,newLine:true});
+  }
+}
 
 
 /*
@@ -110,9 +133,9 @@ function loadDefaultConfig(){
   try {
     config = require(path.resolve(defaultConfigFile));
     //TODO valid configuration
-    log("Using configuration file","blue") ;
+    logInfo("Using configuration file") ;
   } catch(e) {
-    log("No configuration provided","red",true) ;
+    logError("No configuration provided") ;
 
     process.exit(1);
   }
@@ -122,9 +145,21 @@ function loadDefaultConfig(){
 
 
 
-function log(message,color,bypassVerbose){
-  if(verbose || bypassVerbose){
+function logError(message){
+  log({message,color:"red",verboseLvl:0,newLine:true});
+}
+function logWarning(message){
+  log({message,color:"yellow",verboseLvl:1,newLine:true});
+}
+function logInfo(message){
+  log({message,color:"blue",verboseLvl:1,newLine:true});
+}
+
+function log({message, color=null, verboseLvl=1,newLine=false}={}) {
+  if (verboseLvl) {
     message = color ? clor[color](message).toString() : message;
-    console.log(message);
+    message += newLine ? "\n" : "" ;
+    process.stdout.write(message);
+    // process.stdout.write(message + newLine ? "\n" : "");
   }
 }

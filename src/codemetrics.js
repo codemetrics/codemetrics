@@ -14,7 +14,7 @@ module.exports = class Codemetrics {
     try {
       this.data = parsers[0].run(this.input);
     } catch(e){
-      console.error(e);
+      console.error(parsers[0],e);
     }
     // trig error
     return this;
