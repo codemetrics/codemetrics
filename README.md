@@ -22,15 +22,15 @@ Codemetrics is based on a file analysis model. That means the input and work uni
                               |                                                                      |
                               |                                                                      |
                               |                                                                      |
-                              |                                                                      |
-                              |   +-------------+         +-------------+         +-------------+    |
-                              |   |             |         |             |         |             |    |
+       Input :                |                                                                      |
+        Glob pattern          |   +-------------+         +-------------+         +-------------+    |
+        Raw data              |   |             |         |             |         |             |    |
            +------------------>   |             |         |             |         |             |    +------------------>
                               |   |  Parser(s)  +---------> Processor(s)+---------> Reporter(s) |    |
-   Input :                    |   |             |         |             |         |             |    |    Output :
-    glob from CLI             |   |             |         |             |         |             |    |    Simple JSON
-    RAW Data                  |   +-------------+         +-------------+         +-------------+    |    Nice console output
-    ...                       |                                                                      |    HTML
+                              |   |             |         |             |         |             |    |    Output :
+                              |   |             |         |             |         |             |    |    Simple JSON
+                              |   +-------------+         +-------------+         +-------------+    |    Nice console output
+                              |                                                                      |    HTML
                               |                                                                      |    ...
                               |                                                                      |
                               |                                                                      |
