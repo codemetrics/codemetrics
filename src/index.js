@@ -1,11 +1,11 @@
 /* global process */
 "use strict";
 
+const Logger = require("./logger.js");
+
 const path = require("path");
 const cli = require("commander");
-const clor = require("clor");
 
-const logSymbols = require("log-symbols");
 
 const Codemetrics = require("./codemetrics.js");
 const handlePluginHelper = require("./handlePluginHelper.js");
@@ -23,12 +23,7 @@ const defaultConfig = {
     }]
 };
 
-//TODO parametrics keys
-var PLUGINS_TYPES_NAMES = {
-  parser : "parsers",
-  reporter : "reporters",
-  process : "processors"
-};
+
 
 const defaultConfigFile = "./codemetrics.config.js";
 
@@ -77,10 +72,11 @@ const reporters= config.reporters.map(reporter => handlePlugin(reporter,"reporte
 
 */
 function handlePlugins(configListePlugins,type, plugins){
-  logLoad(type,0);
-  return Promise.all(configListePlugins.map(plugin=>handlePluginHelper(plugin,type)))
+  Logger.load(type,Logger.LOG_LVLS.LOADING);
+  return Promise.all(configListePlugins.map((plugin) => handlePluginHelper(plugin,type)))
   .then((result) => {
-    logLoad(type,1);
+    Logger.load(type,Logger.LOG_LVLS.SUCCESS);
+
 
     //todo rename process > processor
     if(type === "process") {
@@ -90,25 +86,17 @@ function handlePlugins(configListePlugins,type, plugins){
     return plugins;
   })
   .catch( (result = {msg,errorMsg} ) => {
-    logError(result.msg);
+
+    Logger.error(result.msg);
+
     if(result.errorMsg){
-      logError(clor.line.bold.red("Error : ").line(result.errorMsg).toString());
+      Logger.bigError(result.errorMsg);
     }
     process.exit(1);
   });
 }
 
 
-
-//TODO cst for status
-function logLoad(type,status){
-  if( status === 0) {
-    log({message:"Loading " +PLUGINS_TYPES_NAMES[type]+"... "});
-  }
-  if( status === 1) {
-    log({message:logSymbols.success,newLine:true});
-  }
-}
 
 
 /*
@@ -133,33 +121,12 @@ function loadDefaultConfig(){
   try {
     config = require(path.resolve(defaultConfigFile));
     //TODO valid configuration
-    logInfo("Using configuration file") ;
+    Logger.info("Using configuration file") ;
   } catch(e) {
-    logError("No configuration provided") ;
+    Logger.error("No configuration provided") ;
 
     process.exit(1);
   }
   return config;
 }
 
-
-
-
-function logError(message){
-  log({message,color:"red",verboseLvl:0,newLine:true});
-}
-function logWarning(message){
-  log({message,color:"yellow",verboseLvl:1,newLine:true});
-}
-function logInfo(message){
-  log({message,color:"blue",verboseLvl:1,newLine:true});
-}
-
-function log({message, color=null, verboseLvl=1,newLine=false}={}) {
-  if (verboseLvl) {
-    message = color ? clor[color](message).toString() : message;
-    message += newLine ? "\n" : "" ;
-    process.stdout.write(message);
-    // process.stdout.write(message + newLine ? "\n" : "");
-  }
-}
