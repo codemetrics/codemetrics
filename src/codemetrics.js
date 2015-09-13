@@ -1,5 +1,7 @@
 "use strict";
 
+const Logger = require("./logger.js");
+
 module.exports = class Codemetrics {
   constructor(input,verbose = false) {
     this.input = input;
@@ -9,23 +11,23 @@ module.exports = class Codemetrics {
   }
 
   parse(parsers){
-    this._log("--------------------");
-    this._log("Parse...");
+    Logger.separator();
+    Logger.info("Parse...");
     try {
       this.data = parsers[0].run(this.input);
     } catch(e){
-      console.error(parsers[0],e);
+      Logger.error(parsers[0],e);
     }
     // trig error
     return this;
   }
 
   process(processors) {
-    this._log("--------------------");
-    this._log("Process...");
+    Logger.separator();
+    Logger.info("Process...");
 
     this.data = processors.reduce((acc,processor) => {
-      this._log("->",processor.key)
+      Logger.info("->",processor.key)
         acc[processor.key] = processor.run(this.data);
         return acc;
     },{});
@@ -35,17 +37,11 @@ module.exports = class Codemetrics {
   }
 
   report(reporters) {
-    this._log("--------------------");
-    this._log("Report...");
+    Logger.separator();
+    Logger.info("Report...");
 
     reporters.forEach(reporter=>reporter.run(this.data));
 
     return this;
-  }
-
-  _log(message) {
-    if(this.isVerbose){
-      console.log(message);
-    }
   }
 }

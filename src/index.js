@@ -56,9 +56,7 @@ handlePlugins(config.parsers,"parser",{})
   //.then((result) => {parsers = result})
   //TODO Fix the name processor > process
   .then((plugins) => handlePlugins(config.processors,"process",plugins))
-  //.then((result) => {processors = result})
   .then((plugins) => handlePlugins(config.reporters,"reporter",plugins))
-  //.then((result) => {reporters = result})
   .then((plugins) => {
     new Codemetrics(input,verbose)
     .parse(plugins.parser)
@@ -111,19 +109,21 @@ if(!program.args.length) {
 
 
 
-function processConfig(CLIconfig){
-  return CLIconfig ? require(path.resolve(CLIconfig)) : loadDefaultConfig() ;
+function processConfig(configFile = defaultConfigFile){
+    //TODO valid configuration
+  return configFile ?
+    require(path.resolve(customConfigFileProvided)) :
+    loadDefaultConfig() ;
 }
 
 
-function loadDefaultConfig(){
+function loadConfigFile(configFile){
   var config  ;
   try {
-    config = require(path.resolve(defaultConfigFile));
-    //TODO valid configuration
-    Logger.info("Using configuration file") ;
+    config = require(path.resolve(configFile));
   } catch(e) {
-    Logger.error("No configuration provided") ;
+
+    Logger.error("Can't load the config file",e) ;
 
     process.exit(1);
   }
