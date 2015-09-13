@@ -14,9 +14,11 @@ module.exports = class Codemetrics {
     Logger.separator();
     Logger.info("Parse...");
     try {
-      this.data = parsers[0].run(this.input);
+      this.data = parsers[0].run(this.input,{log:Logger});
     } catch(e){
-      Logger.error(parsers[0],e);
+      var msg = "Error from "+parsers[0].name+" parser \n ----> "+e.toString();
+      Logger.error(msg);
+      process.exit(1);
     }
     // trig error
     return this;
