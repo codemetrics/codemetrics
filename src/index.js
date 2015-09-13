@@ -11,18 +11,6 @@ const Codemetrics = require("./codemetrics.js");
 const handlePluginHelper = require("./handlePluginHelper.js");
 
 
-const defaultConfig = {
-    parsers : [{
-      name:"file"
-    }],
-    processors : [{
-      name:"sloc"
-    }],
-    reporters : [{
-      name:"console"
-    }]
-};
-
 
 
 const defaultConfigFile = "./codemetrics.config.js";
@@ -86,7 +74,6 @@ function handlePlugins(configListePlugins,type, plugins){
   .catch( (result = {msg,errorMsg} ) => {
 
     Logger.error(result.msg);
-
     if(result.errorMsg){
       Logger.bigError(result.errorMsg);
     }
@@ -106,14 +93,56 @@ if(!program.args.length) {
 */
 
 
+function loadDefaultConfig(){
+  if(process.env.NODE_ENV === "dev") {
+    Logger.info("Dev plugins only");
+  }
+  return process.env.NODE_ENV === "dev" ?
+   {
+      parsers : [{
+        name:"raw parser",
+        worker : require("../tests/devPlugins/parser.js")
+      }],
+      processors : [{
+        name:"dumb processor",
+        worker : function() {
+          return {
+            run : function(data) {
+              return data;
+            }
+          }
+        }
+      }],
+      reporters : [{
+        name:"console",
+        worker : function() {
+          return {
+            run : function(data) {
+              console.log(data);
+            }
+          }
+        }
+      }]
+  } :
+  {
+      parsers : [{
+        name:"file"
+      }],
+      processors : [{
+        name:"sloc"
+      }],
+      reporters : [{
+        name:"console"
+      }]
+  }
+}
+
 
 
 
 function processConfig(configFile = defaultConfigFile){
     //TODO valid configuration
-  return configFile ?
-    require(path.resolve(customConfigFileProvided)) :
-    loadDefaultConfig() ;
+  return configFile ? loadConfigFile(configFile) : loadDefaultConfig() ;
 }
 
 
@@ -123,9 +152,10 @@ function loadConfigFile(configFile){
     config = require(path.resolve(configFile));
   } catch(e) {
 
-    Logger.error("Can't load the config file",e) ;
-
-    process.exit(1);
+    Logger.warning("Can't load the config file ( " + configFile+" )",e) ;
+    Logger.warning("Loading default config") ;
+    config = loadDefaultConfig();
+    //process.exit(1);
   }
   return config;
 }
