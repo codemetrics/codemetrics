@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "start": "babel-node src",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "babel-tape-runner tests/**/*.specs.js | tap-spec",
     "prepublish": "babel src --out-dir dist"
   },
   "repository": {
@@ -30,6 +30,10 @@
     "log-symbols": "^1.0.2"
   },
   "devDependencies": {
-    "babel": "^5.6.23"
+    "babel": "^5.6.23",
+    "babel-tape-runner": "^1.2.0",
+    "intercept-stdout": "^0.1.2",
+    "tap-spec": "^4.1.0",
+    "tape": "^4.2.0"
   }
 }
