@@ -5,6 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "start": "babel-node src",
+    "dev" : "NODE_ENV='dev' npm start",
     "test": "babel-tape-runner tests/**/*.specs.js | tap-spec",
     "prepublish": "babel src --out-dir dist"
   },
