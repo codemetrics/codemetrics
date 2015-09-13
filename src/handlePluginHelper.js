@@ -13,16 +13,35 @@ module.exports = handlePlugin;
 //TODO help message if plugin not found
 // -> Auto install
 // TODO provide silent option
+//
+//TODO Test si url
 function handlePlugin(plugin, type){
-  //TODO test if valide object > require
-  //var plugin;
+  if(plugin.worker && typeof(plugin.worker) === "function") {
+    let worker = plugin.worker(plugin.options);
+
+    if(worker.run && typeof(worker.run) === "function") {
+      return Promise.resolve(worker);
+    } else {
+      return searchForAPackage(plugin,type)
+    }
+
+  } else {
+    return searchForAPackage(plugin,type)
+  }
+}
+
+function searchForAPackage(plugin, type){
   var promisePlugin;
 
   var pkgName = "codemetrics-"+type+"-"+plugin.name ;
 
-
   try {
-    promisePlugin = Promise.resolve(require(pkgName)(plugin.options));
+    let worker = require(pkgName)(plugin.options);
+
+    worker.name = worker.name || plugin.name;
+
+    promisePlugin = Promise.resolve(worker);
+
   } catch(e){
     // TODO Check if error is only for the package that codemetrics wants to require
     if ( e.code === "MODULE_NOT_FOUND" ) {
@@ -53,6 +72,7 @@ function handlePlugin(plugin, type){
 
   return promisePlugin;
 }
+
 
 function askForAutoInstall(pkgName){
 
