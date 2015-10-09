@@ -1,6 +1,3 @@
-/* global process */
-"use strict";
-
 const Logger = require("./logger.js");
 
 const path = require("path");
@@ -20,7 +17,7 @@ const defaultConfigFile = "./codemetrics.config.js";
 //TODO provide cli input only when used with nodejs
 
 cli
-  .version('0.0.1')
+  .version("0.0.1")
   .option("-C, --config <file>", "config file")
   .option("-v, --verbose", "tell me what you do")
   .parse(process.argv);
@@ -46,11 +43,11 @@ handlePlugins(config.parsers,"parser",{})
   .then((plugins) => handlePlugins(config.processors,"process",plugins))
   .then((plugins) => handlePlugins(config.reporters,"reporter",plugins))
   .then((plugins) => {
-    new Codemetrics(input,verbose)
+      new Codemetrics(input,verbose)
     .parse(plugins.parser)
     .process(plugins.processor)
     .report(plugins.reporter) ;
-  })
+  });
 
 /*
 const processors = config.processors.map(processor => handlePlugin(processor,"process"));
@@ -58,26 +55,26 @@ const reporters= config.reporters.map(reporter => handlePlugin(reporter,"reporte
 
 */
 function handlePlugins(configListePlugins,type, plugins){
-  Logger.load(type,Logger.LOG_LVLS.LOADING);
-  return Promise.all(configListePlugins.map((plugin) => handlePluginHelper(plugin,type)))
+    Logger.load(type,Logger.LOG_LVLS.LOADING);
+    return Promise.all(configListePlugins.map((plugin) => handlePluginHelper(plugin,type)))
   .then((result) => {
-    Logger.load(type,Logger.LOG_LVLS.SUCCESS);
+      Logger.load(type,Logger.LOG_LVLS.SUCCESS);
 
 
     //todo rename process > processor
-    if(type === "process") {
-      type="processor";
-    }
-    plugins[type] = result;
-    return plugins;
+      if(type === "process") {
+          type="processor";
+      }
+      plugins[type] = result;
+      return plugins;
   })
   .catch( (result = {msg,errorMsg} ) => {
 
-    Logger.error(result.msg);
-    if(result.errorMsg){
-      Logger.bigError(result.errorMsg);
-    }
-    process.exit(1);
+      Logger.error(result.msg);
+      if(result.errorMsg){
+          Logger.bigError(result.errorMsg);
+      }
+      process.exit(1);
   });
 }
 
@@ -94,47 +91,47 @@ if(!program.args.length) {
 
 
 function loadDefaultConfig(){
-  if(process.env.NODE_ENV === "dev") {
-    Logger.info("Dev plugins only");
-  }
-  return process.env.NODE_ENV === "dev" ?
-   {
-      parsers : [{
-        name:"raw parser",
-        worker : require("../tests/devPlugins/parser.js")
-      }],
-      processors : [{
-        name:"dumb processor",
-        worker : function() {
-          return {
-            run : function(data) {
-              return data;
-            }
-          }
-        }
-      }],
-      reporters : [{
-        name:"console",
-        worker : function() {
-          return {
-            run : function(data) {
-              console.log(data);
-            }
-          }
-        }
-      }]
-  } :
-  {
-      parsers : [{
-        name:"file"
-      }],
-      processors : [{
-        name:"sloc"
-      }],
-      reporters : [{
-        name:"console"
-      }]
-  }
+    if(process.env.NODE_ENV === "dev") {
+        Logger.info("Dev plugins only");
+    }
+    return process.env.NODE_ENV === "dev" ?
+        {
+            parsers : [{
+                name:"raw parser",
+                worker : require("../tests/devPlugins/parser.js")
+            }],
+            processors : [{
+                name:"dumb processor",
+                worker : function() {
+                  return {
+                  run : function(data) {
+                    return data;
+                }
+              };
+              }
+            }],
+            reporters : [{
+                name:"console",
+                worker : function() {
+                  return {
+                  run : function(data) {
+                    console.log(data);
+                }
+              };
+              }
+            }]
+        } :
+        {
+            parsers : [{
+                name:"file"
+            }],
+            processors : [{
+                name:"sloc"
+            }],
+            reporters : [{
+                name:"console"
+            }]
+        };
 }
 
 
@@ -142,21 +139,21 @@ function loadDefaultConfig(){
 
 function processConfig(configFile = defaultConfigFile){
     //TODO valid configuration
-  return configFile ? loadConfigFile(configFile) : loadDefaultConfig() ;
+    return configFile ? loadConfigFile(configFile) : loadDefaultConfig() ;
 }
 
 
 function loadConfigFile(configFile){
-  var config  ;
-  try {
-    config = require(path.resolve(configFile));
-  } catch(e) {
+    var config  ;
+    try {
+        config = require(path.resolve(configFile));
+    } catch(e) {
 
-    Logger.warning("Can't load the config file ( " + configFile+" )",e) ;
-    Logger.warning("Loading default config") ;
-    config = loadDefaultConfig();
+        Logger.warning("Can't load the config file ( " + configFile+" )",e) ;
+        Logger.warning("Loading default config") ;
+        config = loadDefaultConfig();
     //process.exit(1);
-  }
-  return config;
+    }
+    return config;
 }
 
