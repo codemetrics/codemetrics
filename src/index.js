@@ -4,7 +4,8 @@ const path = require("path");
 const cli = require("commander");
 
 
-const Codemetrics = require("./codemetrics.js");
+import Codemetrics = from "./codemetrics";
+
 const handlePluginHelper = require("./handlePluginHelper.js");
 
 
@@ -26,6 +27,7 @@ cli
 const config = processConfig(cli.config);
 const verbose = cli.verbose ? cli.verbose : true;
 const input = cli.args[0] ;
+
   //TODO check input
 //console.log(config,cli.args);
 
@@ -43,17 +45,14 @@ handlePlugins(config.parsers,"parser",{})
   .then((plugins) => handlePlugins(config.processors,"process",plugins))
   .then((plugins) => handlePlugins(config.reporters,"reporter",plugins))
   .then((plugins) => {
-      new Codemetrics(input,verbose)
+      new Codemetrics(input,Logger)
     .parse(plugins.parser)
     .process(plugins.processor)
     .report(plugins.reporter) ;
   });
 
-/*
-const processors = config.processors.map(processor => handlePlugin(processor,"process"));
-const reporters= config.reporters.map(reporter => handlePlugin(reporter,"reporter"));
 
-*/
+
 function handlePlugins(configListePlugins,type, plugins){
     Logger.load(type,Logger.LOG_LVLS.LOADING);
     return Promise.all(configListePlugins.map((plugin) => handlePluginHelper(plugin,type)))
@@ -95,32 +94,7 @@ function loadDefaultConfig(){
         Logger.info("Dev plugins only");
     }
     return process.env.NODE_ENV === "dev" ?
-        {
-            parsers : [{
-                name:"raw parser",
-                worker : require("../tests/devPlugins/parser.js")
-            }],
-            processors : [{
-                name:"dumb processor",
-                worker : function() {
-                  return {
-                  run : function(data) {
-                    return data;
-                }
-              };
-              }
-            }],
-            reporters : [{
-                name:"console",
-                worker : function() {
-                  return {
-                  run : function(data) {
-                    console.log(data);
-                }
-              };
-              }
-            }]
-        } :
+  :
         {
             parsers : [{
                 name:"file"
