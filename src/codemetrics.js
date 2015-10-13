@@ -1,23 +1,25 @@
-"use strict";
 
-const Logger = require("./logger.js");
+export default class Codemetrics {
+  constructor(input, Logger) {
+      //TODO logger validator
+      if(typeof Logger === "undefined") {
+        throw new Error("You must specify a logger");
+      }
 
-module.exports = class Codemetrics {
-  constructor(input,verbose = false) {
       this.input = input;
       this.data = {};
-      this.isVerbose = verbose;
+      this.logger = Logger;
       return this;
   }
 
   parse(parsers){
-      Logger.separator();
-      Logger.info("Parse...");
+      this.logger.separator();
+      this.logger.info("Parse...");
       try {
-          this.data = parsers[0].run(this.input,{log:Logger});
+          this.data = parsers[0].run(this.input,{log:this.logger});
       } catch(e){
           var msg = "Error from "+parsers[0].name+" parser \n ----> "+e.toString();
-          Logger.error(msg);
+          this.logger.error(msg);
           process.exit(1);
       }
     // trig error
@@ -25,11 +27,11 @@ module.exports = class Codemetrics {
   }
 
   process(processors) {
-      Logger.separator();
-      Logger.info("Process...");
+      this.logger.separator();
+      this.logger.info("Process...");
 
       this.data = processors.reduce((acc,processor) => {
-          Logger.info("->",processor.key);
+          this.logger.info("->",processor.key);
           acc[processor.key] = processor.run(this.data);
           return acc;
       },{});
@@ -39,8 +41,8 @@ module.exports = class Codemetrics {
   }
 
   report(reporters) {
-      Logger.separator();
-      Logger.info("Report...");
+      this.logger.separator();
+      this.logger.info("Report...");
 
       reporters.forEach(reporter=>reporter.run(this.data));
 
