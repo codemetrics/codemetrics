@@ -1,40 +1,22 @@
 const Logger = require("./logger.js");
 
 const path = require("path");
-const cli = require("commander");
 
 
-import Codemetrics = from "./codemetrics";
+import Codemetrics from "./codemetrics";
+
+import {config, input, verboseLvL} from "./cli";
+
 
 const handlePluginHelper = require("./handlePluginHelper.js");
-
-
-
-
-const defaultConfigFile = "./codemetrics.config.js";
-
-
-
-//TODO provide cli input only when used with nodejs
-
-cli
-  .version("0.0.1")
-  .option("-C, --config <file>", "config file")
-  .option("-v, --verbose", "tell me what you do")
-  .parse(process.argv);
-
-
-const config = processConfig(cli.config);
-const verbose = cli.verbose ? cli.verbose : true;
-const input = cli.args[0] ;
 
   //TODO check input
 //console.log(config,cli.args);
 
-var parsers,processors,reporters;
+//var parsers,processors,reporters;
 
 
-
+Logger.setVerboseLevel(verboseLvL);
 
 
 //TODO provide ability to handle multiples parsers
@@ -80,54 +62,5 @@ function handlePlugins(configListePlugins,type, plugins){
 
 
 
-/*
-if(!program.args.length) {
-    program.help();
-} else {
-    console.log('Keywords: ' + program.args);
-}
-*/
 
-
-function loadDefaultConfig(){
-    if(process.env.NODE_ENV === "dev") {
-        Logger.info("Dev plugins only");
-    }
-    return process.env.NODE_ENV === "dev" ?
-  :
-        {
-            parsers : [{
-                name:"file"
-            }],
-            processors : [{
-                name:"sloc"
-            }],
-            reporters : [{
-                name:"console"
-            }]
-        };
-}
-
-
-
-
-function processConfig(configFile = defaultConfigFile){
-    //TODO valid configuration
-    return configFile ? loadConfigFile(configFile) : loadDefaultConfig() ;
-}
-
-
-function loadConfigFile(configFile){
-    var config  ;
-    try {
-        config = require(path.resolve(configFile));
-    } catch(e) {
-
-        Logger.warning("Can't load the config file ( " + configFile+" )",e) ;
-        Logger.warning("Loading default config") ;
-        config = loadDefaultConfig();
-    //process.exit(1);
-    }
-    return config;
-}
 
