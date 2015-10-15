@@ -1,11 +1,12 @@
-const Logger = require("./logger.js");
+import Logger from "./logger" ;
 
-const path = require("path");
 
 
 import Codemetrics from "./codemetrics";
 
-import {config, input, verboseLvL} from "./cli";
+import cli from "./cli";
+
+//console.log(config,input);
 
 
 const handlePluginHelper = require("./handlePluginHelper.js");
@@ -16,7 +17,7 @@ const handlePluginHelper = require("./handlePluginHelper.js");
 //var parsers,processors,reporters;
 
 
-Logger.setVerboseLevel(verboseLvL);
+const {config, input} = cli();
 
 
 //TODO provide ability to handle multiples parsers
