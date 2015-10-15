@@ -1,5 +1,3 @@
-"use strict";
-
 var test = require("tape");
 var intercept = require("intercept-stdout");
 
@@ -19,10 +17,10 @@ test("should keep the verbose config",function(t){
   var captured_text = "";
 
   var unhook_intercept = intercept(function(txt) {
-      captured_text += txt;
+    captured_text += txt;
   });
 
-  Logger.info("test Logger 1")
+  Logger.info("test Logger 1");
   Logger2.info("test Logger 2");
 
   Logger.setVerboseLevel(4);
