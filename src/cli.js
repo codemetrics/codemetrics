@@ -49,7 +49,7 @@ export default function run(){
   }
 
   return {
-    config : processConfig(dataCLI.config) || defaultConfig,
+    config : processConfig(dataCLI.C) || defaultConfig,
     input : dataCLI._[0]
   };
 }
