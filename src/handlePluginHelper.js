@@ -1,10 +1,9 @@
 "use strict";
-//const npm = require("npm");
 
-var exec = require("child_process").exec;
+import {exec} from "child_process";
 
-const inquirer = require("inquirer");
-const clor = require("clor");
+import inquirer from "inquirer";
+import clor  from "clor";
 
 
 
@@ -46,6 +45,9 @@ function searchForAPackage(plugin, type) {
     // TODO Check if error is only for the package that codemetrics wants to require
     if (e.code === "MODULE_NOT_FOUND") {
       const msg = clor.yellow(`The ${plugin.name} ${type} ( ${pkgName} ) cannot be found.`)
+
+
+
         .line("You have to install it before running CodeMetrics.")
         .line
         .line.bold.yellow("May I try to do it for you ?")
@@ -83,7 +85,7 @@ function askForAutoInstall(pkgName) {
       type: "confirm",
       name: "autoinstall",
       message: "Do you want to install " + pkgName + " ?",
-      default: true,
+      default: true
     }], function(response) {
       if (response.autoinstall) {
         resolve();
@@ -97,25 +99,11 @@ function askForAutoInstall(pkgName) {
   });
 }
 
-/* Require npm dependeny
-function installPackage(pkgName) {
-npm.load(null,function(err, _npm) {
-  if(err){
-    console.log(err);
-  }
-
-  _npm.commands.install([pkgName],function(){
-    hello = require(pkgName);
-    cb();
-  });
-});
-}
-*/
 
 function installPackage(pkgName) {
   return new Promise(function(resolve, reject) {
     log2("Trying to install from npm :  npm install " + pkgName);
-    exec("npm install " + pkgName, function(error, stdout, stderr) {
+    exec("npm install " + pkgName, function(error, stdout) {
 
       //TODO handle code error from npm
       if (error) {
