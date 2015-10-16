@@ -77,7 +77,7 @@ function askForAutoInstall(pkgName) {
         resolve();
       } else {
         reject({
-          msg: "Sorry I can't continue. You should provide an existing plugin..."
+          msg: "Sorry I can't continue. You should provide a valid plugin..."
         });
       }
     });

@@ -54,25 +54,10 @@ export default function run(){
   };
 }
 
-/*cli
-  .usage("<file or glob pattern> [options]")
-  .version(process.env.npm_package_version)
-  .option("-C, --config <file>", "config file")
-  .option("-s, --silent", "no output")
-  .option("-v, --verboseLvl <n>", "Select a level between 0 (silent) and 4 (debug). Default to 2 ",parseInt,VERBOSE_LVLS.INFORMATIVE)
-  .parse(process.argv);*/
-
-
-
-
-
-
-
-
 
 function processConfig(configFile) {
   if(!configFile) {
-    Logger.infoPlus("trying to load the default config file...");
+    Logger.infoPlus("* Trying to load the default config file...");
     configFile = "codemetrics.config.js";
   }
   //TODO valid configuration
@@ -88,7 +73,7 @@ function loadConfigFile(configFile) {
   } catch (e) {
 
     Logger.warning("Can't load the config file ( " + configFile + " )", e);
-    Logger.warning("Loading default config");
+    Logger.warning("* Loading default config");
     //process.exit(1);
 
   }

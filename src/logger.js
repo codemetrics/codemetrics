@@ -21,7 +21,7 @@ const VERBOSE_LVLS = {
 
 const logLoad = {
   [LOG_LVLS.LOADING]: (type) => log({
-    message: "Loading " + PLUGINS_TYPES_NAMES[type] + "... ",
+    message: "* Loading " + PLUGINS_TYPES_NAMES[type] + "... ",
     verboseLvl: VERBOSE_LVLS.INFORMATIVE,
     newLine: false
   }), [LOG_LVLS.SUCCESS]: () => log({
