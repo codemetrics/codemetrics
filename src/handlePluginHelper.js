@@ -1,33 +1,32 @@
-"use strict";
-
 import {exec} from "child_process";
-
 import inquirer from "inquirer";
-import clor  from "clor";
+import Logger from "./logger";
 
+const messageBeforeAskingAutoInstall = `
+  The provided configuration specified a plugin which can't be found .
+  It's certainly because you didn't install it with npm before running Codemetrics.
 
+  I can try to do it for you.
+`;
 
 module.exports = handlePlugin;
 
-//TODO help message if plugin not found
+/**
+ * This handler can check and install missing
+ * plugins in order to provide a valide component
+ * in the main runner
+  // TODO provide silent option
+  //TODO Test if url, give the ability to install a plugin out of npm ?
+ */
 // -> Auto install
-// TODO provide silent option
 //
-//TODO Test si url
 function handlePlugin(plugin, type) {
-  if (plugin.worker && typeof(plugin.worker) === "function") {
-    let worker = plugin.worker(plugin.options);
 
-    if (worker.run && typeof(worker.run) === "function") {
-      return Promise.resolve(worker);
-    } else {
-      return searchForAPackage(plugin, type);
-    }
-
-  } else {
-    return searchForAPackage(plugin, type);
-  }
+  return isPluginValide(plugin) ?
+    Promise.resolve(plugin.worker(plugin.options)) :
+    searchForAPackage(plugin, type) ;
 }
+
 
 function searchForAPackage(plugin, type) {
   var promisePlugin;
@@ -44,22 +43,11 @@ function searchForAPackage(plugin, type) {
   } catch (e) {
     // TODO Check if error is only for the package that codemetrics wants to require
     if (e.code === "MODULE_NOT_FOUND") {
-      const msg = clor.yellow(`The ${plugin.name} ${type} ( ${pkgName} ) cannot be found.`)
-
-
-
-        .line("You have to install it before running CodeMetrics.")
-        .line
-        .line.bold.yellow("May I try to do it for you ?")
-        .line();
-
-      log(msg.toString());
+      Logger.warning(`The ${plugin.name} ${type} ( ${pkgName} ) cannot be found.`);
+      Logger.warning(messageBeforeAskingAutoInstall);
 
       promisePlugin = askForAutoInstall(pkgName)
-        .then(() => {
-          log(pkgName + " install in progress...", "green");
-          return installPackage(pkgName);
-        })
+        .then(() => installPackage(pkgName))
         .then(() => handlePlugin(plugin, type));
       //.then((plugin) => resolve(plugin))
       //.catch((message) => reject(message)
@@ -78,13 +66,11 @@ function searchForAPackage(plugin, type) {
 
 function askForAutoInstall(pkgName) {
 
-  //clor.red.bold("fee").line.inverse("fi").line.underline("fo")
-
   return new Promise(function(resolve, reject) {
     inquirer.prompt([{
       type: "confirm",
       name: "autoinstall",
-      message: "Do you want to install " + pkgName + " ?",
+      message: "Do you want to install " + pkgName + " from npm ?",
       default: true
     }], function(response) {
       if (response.autoinstall) {
@@ -99,10 +85,33 @@ function askForAutoInstall(pkgName) {
   });
 }
 
+/**
+ * The plugin must have a worker function
+ * the worker must be a runnable function
+ * @param  {[type]}  plugin [description]
+ * @return {Boolean}        [description]
+ */
+function isPluginValide(plugin){
+  if (plugin.worker && typeof(plugin.worker) === "function") {
+    const worker = plugin.worker(plugin.options);
+
+    if (worker.run && typeof(worker.run) === "function") {
+      return true;
+
+    } else {
+      return false;
+    }
+
+  } else {
+    return false;
+  }
+}
+
 
 function installPackage(pkgName) {
+  Logger.info("Trying to install from npm :  npm install " + pkgName);
+
   return new Promise(function(resolve, reject) {
-    log2("Trying to install from npm :  npm install " + pkgName);
     exec("npm install " + pkgName, function(error, stdout) {
 
       //TODO handle code error from npm
@@ -111,21 +120,10 @@ function installPackage(pkgName) {
           msg: error
         });
       } else {
-        log2(stdout);
+        Logger.debug(stdout);
+        Logger.notice(pkgName + " install in progress...");
         resolve(stdout);
       }
     });
   });
-}
-
-//TODO extract to an helper
-function log(message, color) {
-  message = color ? clor[color](message).toString() : message;
-  console.log(message);
-}
-
-function log2(...params) {
-  //if(verbose.LVL>2) {
-  log(params);
-  //}
 }

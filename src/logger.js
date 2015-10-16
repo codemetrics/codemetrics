@@ -57,6 +57,11 @@ module.exports = {
       message, color: "blue", verboseLvl: VERBOSE_LVLS.INFORMATIVE
     });
   },
+  notice :function(message) {
+    log({
+      message, color: "green", verboseLvl: VERBOSE_LVLS.INFORMATIVE
+    });
+  },
   infoPlus: function(message) {
     log({
       message, color: "blue", verboseLvl: VERBOSE_LVLS.TALKATIVE
