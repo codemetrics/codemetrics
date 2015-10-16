@@ -100,5 +100,5 @@ function log({
 
 
 function bigError(message) {
-  console.log(clor.line.bold.red("Error : ").line(message).toString());
+  process.stderr.write(clor.line.bold.red("Error : ").line(message).toString());
 }
