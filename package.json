@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "start": "babel-node src",
-    "dev": "npm start -- --config ./tests/dev.config.js ./tests/samples/",
+    "dev": "npm start -- --config ./tests/dev.config.js ./tests/samples/ -v 4",
     "test": "babel-tape-runner tests/**/*.specs.js | tap-spec",
     "test-cli": "babel-tape-runner tests/cli/cli.spec.js | tap-spec",
     "prepublish": "babel src --out-dir dist",
