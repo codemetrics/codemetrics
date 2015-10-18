@@ -48,6 +48,8 @@ export default function run(){
     Logger.setVerboseLevel(VERBOSE_LVLS.INFORMATIVE);
   }
 
+  const config = processConfig(dataCLI.C || dataCLI.config) || defaultConfig ;
+
   return {
     config : processConfig(dataCLI.C) || defaultConfig,
     input : dataCLI._[0]
