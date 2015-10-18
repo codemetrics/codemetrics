@@ -47,7 +47,10 @@ module.exports = {
       message, color: "red", verboseLvl: VERBOSE_LVLS.MINIMAL
     });
   },
-  warning: function(message) {
+  warning: function(message,symbol) {
+    if(symbol){
+      log({message:logSymbols.warning+" ", verboseLvl: VERBOSE_LVLS.MINIMAL,newLine: false});
+    }
     log({
       message, color: "yellow", verboseLvl: VERBOSE_LVLS.MINIMAL
     });
