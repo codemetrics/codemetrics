@@ -27,6 +27,7 @@
   },
   "homepage": "https://github.com/maxdow/codemetrics#readme",
   "dependencies": {
+    "cli-table": "^0.3.1",
     "clor": "^1.0.2",
     "inquirer": "^0.9.0",
     "log-symbols": "^1.0.2",
