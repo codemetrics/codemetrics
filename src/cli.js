@@ -2,6 +2,7 @@ import minimist from "minimist";
 
 import path from "path";
 import Logger from "./logger" ;
+import Table from "cli-table";
 
 const VERBOSE_LVLS = {
   NO_OUTPUT: 0,
@@ -49,9 +50,10 @@ export default function run(){
   }
 
   const config = processConfig(dataCLI.C || dataCLI.config) || defaultConfig ;
+  displayTable(config);
 
   return {
-    config : processConfig(dataCLI.C) || defaultConfig,
+    config,
     input : dataCLI._[0]
   };
 }
@@ -95,3 +97,25 @@ function displayHelp(){
     --verboseLvl <n>  Select a level between 0 (silent) and 4 (debug). Default to 2
     `;
 }
+
+function displayTable(config) {
+  // instantiate
+  var summary = new Table({
+    head: ["Parsers", "Processors","Reporters"]
+  });
+
+  var i = 0 ;
+  while(config.parsers[i] !== undefined || config.processors[i] !== undefined, config.reporters[i] !== undefined){
+    summary.push([
+      config.parsers[i] !== undefined ? config.parsers[i].name : "",
+      config.processors[i] !== undefined ? config.processors[i].name : "",
+      config.reporters[i] !== undefined ? config.reporters[i].name : ""]
+      );
+    i++;
+  }
+
+
+  console.log(summary.toString());
+
+}
+
