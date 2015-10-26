@@ -73,7 +73,8 @@ function loadConfigFile(configFile) {
   var config;
   try {
     config = require(path.resolve(configFile));
-    Logger.debug("config => "+config);
+    Logger.debug("config => ");
+    Logger.debug(config);
   } catch (e) {
 
     Logger.warning("Can't load the config file ( " + configFile + " )", true);
