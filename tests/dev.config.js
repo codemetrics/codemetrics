@@ -1,5 +1,5 @@
 //Config file for dev purpose
-{
+module.exports = {
     parsers: [{
         name: "raw parser",
         worker: function() {
@@ -34,4 +34,4 @@
             };
         }
     }]
-}
+};
