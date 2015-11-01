@@ -78,6 +78,7 @@ function loadConfigFile(configFile) {
   } catch (e) {
 
     Logger.warning("Can't load the config file ( " + configFile + " )", true);
+    Logger.warning(e);
     Logger.warning("* Loading default config");
     //process.exit(1);
 
