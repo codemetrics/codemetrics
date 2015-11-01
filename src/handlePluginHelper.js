@@ -23,7 +23,7 @@ module.exports = handlePlugin;
 function handlePlugin(plugin, type) {
 
   return isPluginValide(plugin) ?
-    Promise.resolve(plugin.worker(plugin.options)) :
+    Promise.resolve(plugin) :
     searchForAPackage(plugin, type) ;
 }
 
@@ -34,11 +34,11 @@ function searchForAPackage(plugin, type) {
   var pkgName = "codemetrics-" + type + "-" + plugin.name;
 
   try {
-    const worker = require(pkgName)(plugin.options);
+    const plugin = require(pkgName);
 
-    worker.name = worker.name || plugin.name;
+    //plugin.name = worker.name || plugin.name;
 
-    promisePlugin = Promise.resolve(worker);
+    promisePlugin = Promise.resolve(plugin);
 
   } catch (e) {
     // TODO Check if error is only for the package that codemetrics wants to require
@@ -92,7 +92,7 @@ function askForAutoInstall(pkgName) {
  * @return {Boolean}        [description]
  */
 function isPluginValide(plugin){
-  if (plugin.worker && typeof(plugin.worker) === "function") {
+  /*if (plugin.worker && typeof(plugin.worker) === "function") {
     const worker = plugin.worker(plugin.options);
 
     if (worker.run && typeof(worker.run) === "function") {
@@ -103,6 +103,19 @@ function isPluginValide(plugin){
     }
 
   } else {
+    return false;
+  }*/
+
+  //warn if name not present
+  if(plugin.run) {
+    if(typeof(plugin.run) === "function") {
+      return true;
+    } else {
+      //TODO raison
+      return false;
+    }
+  } else {
+    //TODO raison
     return false;
   }
 }

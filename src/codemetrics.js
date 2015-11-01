@@ -32,8 +32,8 @@ export default class Codemetrics {
         this.logger.info("Process...");
 
         this.data = processors.reduce((acc, processor) => {
-            this.logger.info("->", processor.key);
-            acc[processor.key] = processor.run(this.data);
+            this.logger.info("-> " + processor.name);
+            acc[processor.name] = processor.run(this.data);
             return acc;
         }, {});
 
