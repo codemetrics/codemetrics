@@ -38,9 +38,7 @@
     //
 
     // disallow use of undeclared variables unless mentioned in a /*global */ block
-    "no-undef": 2,
-    // warn about the use of undefined variable
-    "no-undefined": 1,
+    "no-undef": 2
 
 
 
