@@ -1,15 +1,15 @@
 //Config file for dev purpose
 module.exports = {
-    parsers: [{
-        name: "raw parser",
-        run: function() {
-          return [{
-            name: "the file",
-            path: ".../.../",
-            data: ["111", "222", "333"]
-          }];
-        }
-    }],
+  parsers: [{
+    name: "raw parser",
+    run: function() {
+      return [{
+        name: "the file",
+        path: ".../.../",
+        data: ["111", "222", "333"]
+      }];
+    }
+  }],
   processors: [{
     name: "dumb processor",
     run: function(data) {
