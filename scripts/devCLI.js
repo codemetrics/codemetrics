@@ -4,8 +4,12 @@ import {exec} from "child_process";
 
 const CLIChoices = [
   {
-    name : "Standard with embedded processing",
+    name : "Verbose, simple with embedded processing",
     value : "--config ./tests/dev.config.js ./tests/samples/ -v 4"
+  },
+  {
+    name : "Verbose with embedded processing and plugin parser",
+    value : "--config ./tests/devfile.config.js ./tests/samples/ -v 4"
   }
 ];
 
