@@ -24,21 +24,20 @@ function handlePlugin(plugin, type) {
 
   return isPluginValide(plugin) ?
     Promise.resolve(plugin) :
-    searchForAPackage(plugin, type) ;
+    searchForAPackage(plugin, type)
+    .then(handlePlugin);
 }
 
 
 function searchForAPackage(plugin, type) {
   var promisePlugin;
-
-  var pkgName = "codemetrics-" + type + "-" + plugin.name;
+  const pkgName = "codemetrics-" + type + "-" + plugin.name;
+  Logger.debug("Search for "+pkgName);
 
   try {
-    const plugin = require(pkgName);
-
-    //plugin.name = worker.name || plugin.name;
-
-    promisePlugin = Promise.resolve(plugin);
+    const pluginInstance = require(pkgName)();
+    pluginInstance.name = pluginInstance.name || plugin.name;
+    promisePlugin = Promise.resolve(pluginInstance);
 
   } catch (e) {
     // TODO Check if error is only for the package that codemetrics wants to require
@@ -92,30 +91,20 @@ function askForAutoInstall(pkgName) {
  * @return {Boolean}        [description]
  */
 function isPluginValide(plugin){
-  /*if (plugin.worker && typeof(plugin.worker) === "function") {
-    const worker = plugin.worker(plugin.options);
-
-    if (worker.run && typeof(worker.run) === "function") {
-      return true;
-
-    } else {
-      return false;
-    }
-
-  } else {
-    return false;
-  }*/
-
-  //warn if name not present
+  //todo warn if name not present ?
   if(plugin.run) {
     if(typeof(plugin.run) === "function") {
+      Logger.debug("\n Plugin "+plugin.name+" have a runnable function");
       return true;
     } else {
+      Logger.debug("\n Plugin "+plugin.name+" : runnable property is not a function");
       //TODO raison
       return false;
     }
   } else {
     //TODO raison
+    Logger.debug("\n Plugin "+plugin.name+" : runnable function not found");
+
     return false;
   }
 }
