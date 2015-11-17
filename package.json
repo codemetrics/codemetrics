@@ -1,6 +1,6 @@
 {
   "name": "codemetrics",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "A highly pluggable system to get stats and code metrics from your projects",
   "main": "dist/index.js",
   "scripts": {
