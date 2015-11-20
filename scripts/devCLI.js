@@ -4,8 +4,8 @@ import {exec} from "child_process";
 
 const CLIChoices = [
   {
-    name : "Verbose with embedded processing and plugin parser",
-    value : "--config ./tests/devfile.config.js ./tests/samples/*.* -v 4"
+    name : "Verbose with plugin processing and parser",
+    value : "--config ./tests/devfilesloc.config.js ./tests/samples/*.* -v 4"
   },
   {
     name : "Verbose with embedded processing and plugin parser",
