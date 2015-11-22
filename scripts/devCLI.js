@@ -4,16 +4,20 @@ import {exec} from "child_process";
 
 const CLIChoices = [
   {
+    name : "2 Process plugin ",
+    value : "--config ./tests/samples/config/devfilesloctodo.config.js ./tests/samples/*.* -v 4"
+  },
+  {
     name : "Verbose with plugin processing and parser",
-    value : "--config ./tests/devfilesloc.config.js ./tests/samples/*.* -v 4"
+    value : "--config ./tests/samples/config/devfilesloc.config.js ./tests/samples/*.* -v 4"
   },
   {
     name : "Verbose with embedded processing and plugin parser",
-    value : "--config ./tests/devfile.config.js ./tests/samples/*.* -v 4"
+    value : "--config ./tests/samples/config/devfile.config.js ./tests/samples/*.* -v 4"
   },
   {
     name : "Verbose, simple with embedded processing",
-    value : "--config ./tests/dev.config.js ./tests/samples/ -v 4"
+    value : "--config ./tests/samples/config/dev.config.js ./tests/samples/ -v 4"
   }
 ];
 
