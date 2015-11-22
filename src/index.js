@@ -2,7 +2,7 @@ import Logger from "./logger";
 
 
 
-import Codemetrics from "./codemetrics";
+import Codemetrics from "codemetrics-core";
 
 import cli from "./cli";
 
